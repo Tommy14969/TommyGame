@@ -35,8 +35,5 @@ verify-*.html
 working-*.html
 fetch-*.html
 
-# ROM files (版权原因，不提交到GitHub)
-roms/*.nes
-
-# Images
+# Images (ROM files are included - authorized)
 *.jpg
