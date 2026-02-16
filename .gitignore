@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+
+# Node modules
+node_modules/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary/test files
+test-*.html
+debug-*.html
+check-*.html
+*-test.html
+inline-*.html
+cdn-*.html
+local-*.html
+simple-*.html
+string-*.html
+verify-*.html
+working-*.html
+fetch-*.html
+
+# ROM files (版权原因，不提交到GitHub)
+roms/*.nes
+
+# Images
+*.jpg

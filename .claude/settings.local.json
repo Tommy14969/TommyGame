@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python:*)",
+      "Bash(ls:*)",
+      "Bash(curl:*)",
+      "Bash(netstat:*)",
+      "Bash(npm install:*)",
+      "Bash(taskkill:*)",
+      "Bash(echo:*)",
+      "Bash(while read:*)",
+      "Bash(do echo \"$f\")",
+      "Bash(done)",
+      "Bash(xxd:*)",
+      "Bash(for:*)",
+      "Bash(dd:*)",
+      "Bash(git init:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)"
+    ]
+  }
+}

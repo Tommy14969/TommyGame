@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ROM资源导航 - NES Game Hub</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Courier New', monospace;
+            background: #1a1a1a;
+            color: #fff;
+            padding: 40px 20px;
+            line-height: 1.6;
+        }
+        .container { max-width: 1000px; margin: 0 auto; }
+        h1 {
+            color: #E60012;
+            font-size: 32px;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 0 #fff;
+        }
+        .subtitle { color: #FFD700; margin-bottom: 30px; }
+        .warning {
+            background: #FFD700;
+            color: #000;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border-left: 5px solid #E60012;
+        }
+        .section {
+            background: #2a2a2a;
+            border: 3px solid #444;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+        .section h2 {
+            color: #32CD32;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .resource-card {
+            background: #333;
+            border-left: 4px solid #E60012;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+        }
+        .resource-card h3 {
+            color: #FFD700;
+            margin-bottom: 8px;
+        }
+        .resource-card p {
+            color: #aaa;
+            font-size: 13px;
+            margin-bottom: 10px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #E60012;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 12px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        .btn:hover { background: #C4000F; }
+        .btn.secondary {
+            background: #444;
+        }
+        .btn.secondary:hover { background: #555; }
+        .homebrew-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .homebrew-item {
+            background: #333;
+            padding: 12px;
+            border-radius: 5px;
+            border-left: 3px solid #32CD32;
+        }
+        .homebrew-item h4 {
+            color: #FFD700;
+            margin-bottom: 5px;
+        }
+        .homebrew-item p {
+            font-size: 11px;
+            color: #888;
+        }
+        .back-btn {
+            display: inline-block;
+            background: #E60012;
+            color: #fff;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+        .steps {
+            counter-reset: step;
+        }
+        .step {
+            position: relative;
+            padding-left: 40px;
+            margin-bottom: 15px;
+        }
+        .step::before {
+            counter-increment: step;
+            content: counter(step);
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 28px;
+            height: 28px;
+            background: #E60012;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📥 ROM资源导航</h1>
+        <p class="subtitle">合法获取NES游戏ROM文件</p>
+
+        <div class="warning">
+            <strong>⚠️ 重要提示：</strong>
+            <ul style="margin: 10px 0 0 20px;">
+                <li>ROM文件受版权保护，请合法获取</li>
+                <li>仅供个人学习和研究使用</li>
+                <li>请遵守当地版权法律</li>
+                <li>支持正版，购买官方重制版</li>
+            </ul>
+        </div>
+
+        <!-- 强烈推荐：FC_ROMS GitHub -->
+        <div class="section" style="border-color: #FFD700;">
+            <h2>⭐ 强烈推荐：FC_ROMS GitHub仓库</h2>
+            <div class="resource-card" style="border-left-color: #FFD700; border-width: 5px;">
+                <h3 style="font-size: 18px;">GitHub - FC_ROMS（1053个官方ROM）</h3>
+                <p style="font-size: 14px; color: #fff;">
+                    🎮 <strong>最完整的NES/FDS ROM集合！</strong><br>
+                    包含1053个官方NES和FDS游戏ROM，参考《红白机终极档案》整理。<br>
+                    完整的游戏索引（日文/英文/中文），按发售日期和编号组织。
+                </p>
+
+                <div style="margin-top: 15px; padding: 12px; background: #444; border-radius: 5px;">
+                    <strong style="color: #FFD700;">✨ 优势：</strong><br>
+                    <span style="color: #ccc; font-size: 12px;">
+                        • 1053个官方NES/FDS游戏<br>
+                        • 完整的游戏索引（含中日英文名称）<br>
+                        • 按发售日期编号（0001-1252）<br>
+                        • 仅收录官方原版，无修改版<br>
+                        • 完全免费，易于下载
+                    </span>
+                </div>
+
+                <div style="margin-top: 15px;">
+                    <a href="https://github.com/zdg-kinlon/FC_ROMS" target="_blank" class="btn" style="background: #FFD700; color: #000; font-weight: bold;">访问GitHub仓库</a>
+                    <a href="roms/QUICK_START_ROMS.md" target="_blank" class="btn secondary">查看快速指南</a>
+                </div>
+
+                <h3 style="color: #FFD700; margin-top: 20px;">热门游戏快速查找：</h3>
+                <div style="background: #222; padding: 12px; border-radius: 5px; font-size: 12px; line-height: 1.8;">
+                    <table style="width: 100%; color: #ccc;">
+                        <tr style="border-bottom: 1px solid #444;">
+                            <td style="padding: 5px;"><strong>超级马里奥兄弟</strong></td>
+                            <td style="color: #FFD700;">0066</td>
+                            <td><a href="https://github.com/zdg-kinlon/FC_ROMS/tree/main/ROM/0066" target="_blank" style="color: #32CD32;">下载</a></td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid #444;">
+                            <td style="padding: 5px;"><strong>塞尔达传说</strong></td>
+                            <td style="color: #FFD700;">0101</td>
+                            <td><a href="https://github.com/zdg-kinlon/FC_ROMS/tree/main/ROM/0101" target="_blank" style="color: #32CD32;">下载</a></td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid #444;">
+                            <td style="padding: 5px;"><strong>魂斗罗</strong></td>
+                            <td style="color: #FFD700;">0420</td>
+                            <td><a href="https://github.com/zdg-kinlon/FC_ROMS/tree/main/ROM/0420" target="_blank" style="color: #32CD32;">下载</a></td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid #444;">
+                            <td style="padding: 5px;"><strong>坦克大战</strong></td>
+                            <td style="color: #FFD700;">0065</td>
+                            <td><a href="https://github.com/zdg-kinlon/FC_ROMS/tree/main/ROM/0065" target="_blank" style="color: #32CD32;">下载</a></td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid #444;">
+                            <td style="padding: 5px;"><strong>吃豆人</strong></td>
+                            <td style="color: #FFD700;">0024</td>
+                            <td><a href="https://github.com/zdg-kinlon/FC_ROMS/tree/main/ROM/0024" target="_blank" style="color: #32CD32;">下载</a></td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div style="margin-top: 15px; padding: 10px; background: #2a2a2a; border-radius: 5px; font-size: 11px;">
+                    <strong style="color: #32CD32;">💡 使用提示：</strong><br>
+                    1. 访问仓库查看完整游戏索引<br>
+                    2. 找到想要的游戏编号<br>
+                    3. 访问 ROM/编号/ 文件夹<br>
+                    4. 下载ROM并重命名放入 roms/ 目录
+                </div>
+            </div>
+        </div>
+
+        <!-- 推荐：Internet Archive -->
+        <div class="section">
+            <h2>🌐 推荐：Internet Archive（完全合法）</h2>
+            <div class="resource-card">
+                <h3>Software Library: MAME</h3>
+                <p>Internet Archive的NES游戏集合，完全合法的数字存档，包含大量经典NES游戏。</p>
+                <div>
+                    <a href="https://archive.org/details/softwarelibrary_mame" target="_blank" class="btn">访问网站</a>
+                    <a href="https://archive.org/search.php?query=nes&sin[]=DATETIMEDISPLAY%7C0&sin[]=mediatype%7Ccollection&sin[]=softwarelibrary_mame" target="_blank" class="btn">搜索NES游戏</a>
+                </div>
+            </div>
+
+            <h3 style="color: #FFD700; margin-top: 20px;">快速下载步骤：</h3>
+            <div class="steps">
+                <div class="step">
+                    访问 <a href="https://archive.org/details/softwarelibrary_mame" target="_blank" style="color: #32CD32;">Internet Archive</a>
+                </div>
+                <div class="step">
+                    在搜索框输入游戏英文名（如 "Super Mario Bros"）
+                </div>
+                <div class="step">
+                    找到对应的NES ROM文件
+                </div>
+                <div class="step">
+                    点击下载按钮，保存到 <code>roms/</code> 目录
+                </div>
+                <div class="step">
+                    重命名为规范格式（如 <code>1-Super_Mario_Bros.nes</code>）
+                </div>
+            </div>
+        </div>
+
+        <!-- Homebrew游戏 -->
+        <div class="section">
+            <h2>🎮 Homebrew自制游戏（免费且合法）</h2>
+            <p style="color: #aaa; margin-bottom: 15px;">由独立开发者制作的原创NES游戏，完全免费且合法：</p>
+
+            <div class="homebrew-list">
+                <div class="homebrew-item">
+                    <h4>🎯 Concentration Room</h4>
+                    <p>经典射击游戏，完美的NES示例</p>
+                    <a href="http://www.nesdev.com/" target="_blank" class="btn" style="padding: 5px 10px; font-size: 10px;">下载</a>
+                </div>
+
+                <div class="homebrew-item">
+                    <h4>🦦 Nova the Squirrel</h4>
+                    <p>类似超级马里奥的平台游戏</p>
+                    <a href="https://www.suedey.com/games/nova/" target="_blank" class="btn" style="padding: 5px 10px; font-size: 10px;">下载</a>
+                </div>
+
+                <div class="homebrew-item">
+                    <h4>🌟 Driar</h4>
+                    <p>创新的平台解谜游戏</p>
+                    <a href="https://www.nesdev.com/" target="_blank" class="btn" style="padding: 5px 10px; font-size: 10px;">下载</a>
+                </div>
+
+                <div class="homebrew-item">
+                    <h4>🐉 Gaia's Journey</h4>
+                    <p>动作RPG游戏</p>
+                    <a href="https://itch.io/games/tag-nes" target="_blank" class="btn" style="padding: 5px 10px; font-size: 10px;">下载</a>
+                </div>
+            </div>
+
+            <div style="margin-top: 15px;">
+                <a href="https://itch.io/games/tag-nes" target="_blank" class="btn">浏览更多Homebrew</a>
+                <a href="http://www.nesdev.com/" target="_blank" class="btn secondary">NESdev社区</a>
+            </div>
+        </div>
+
+        <!-- 从卡带提取 -->
+        <div class="section">
+            <h2>💾 从正版卡带提取（100%合法）</h2>
+            <div class="resource-card">
+                <h3>如果您拥有正版NES卡带</h3>
+                <p>使用专业设备从您的卡带中提取ROM文件，这是100%合法的方式。</p>
+
+                <div style="margin-top: 15px;">
+                    <div style="margin-bottom: 10px;">
+                        <strong>推荐设备：</strong>
+                    </div>
+                    <div style="color: #888; font-size: 12px; line-height: 1.8;">
+                        • USB CopyNES (~$50-100)<br>
+                        • Kazzo (~$80)<br>
+                        • INL Retro Programmer (~$100)
+                    </div>
+                </div>
+
+                <div style="margin-top: 15px;">
+                    <a href="https://wiki.nesdev.com/w/index.php/Reading_NES_Cartridges" target="_blank" class="btn">查看教程</a>
+                    <a href="https://www.retrousb.com/" target="_blank" class="btn secondary">购买设备</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- 官方授权 -->
+        <div class="section">
+            <h2>🏢 官方授权服务</h2>
+            <div class="resource-card">
+                <h3>Nintendo Switch Online</h3>
+                <p>任天堂官方订阅服务，提供大量经典NES游戏，完全合法。</p>
+                <div>
+                    <span style="color: #888; font-size: 12px;">包含：超级马里奥、塞尔达、勇者斗恶龙等</span>
+                </div>
+            </div>
+
+            <div class="resource-card" style="margin-top: 15px;">
+                <h3>官方重制版</h3>
+                <p>购买官方重制的NES游戏合集</p>
+                <div>
+                    <span style="color: #888; font-size: 12px;">• 任天堂经典迷你主机<br>• 各类游戏合集</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 快速测试 -->
+        <div class="section">
+            <h2>🚀 快速开始测试</h2>
+            <p style="color: #aaa; margin-bottom: 15px;">想立即测试？推荐下载这些免费的Homebrew游戏：</p>
+
+            <div class="resource-card" style="border-left-color: #32CD32;">
+                <h3 style="color: #32CD32;">✨ 推荐测试游戏（完全免费）</h3>
+                <ol style="color: #888; font-size: 13px; margin-left: 20px;">
+                    <li style="margin-bottom: 8px;">
+                        <strong>Concentration Room</strong> - 经典射击<br>
+                        <a href="http://www.nesdev.com/" target="_blank" style="color: #E60012;">下载地址</a>
+                    </li>
+                    <li style="margin-bottom: 8px;">
+                        <strong>Nova the Squirrel</strong> - 平台冒险<br>
+                        <a href="https://www.suedey.com/games/nova/" target="_blank" style="color: #E60012;">下载地址</a>
+                    </li>
+                    <li style="margin-bottom: 8px;">
+                        <strong>Twin Dragons</strong> - 动作游戏<br>
+                        <a href="https://itch.io/games/tag-nes" target="_blank" style="color: #E60012;">下载地址</a>
+                    </li>
+                </ol>
+
+                <div style="margin-top: 15px; padding: 10px; background: #222; border-radius: 5px;">
+                    <strong style="color: #FFD700;">下载后重命名为：</strong><br>
+                    <code style="color: #32CD32;">99-Test_Game.nes</code><br>
+                    <span style="font-size: 11px; color: #888;">放入 roms/ 目录即可测试</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 完整游戏列表 -->
+        <div class="section">
+            <h2>📋 完整游戏清单（52个）</h2>
+            <p style="color: #aaa; margin-bottom: 15px;">
+                使用下方的英文名称在 Internet Archive 搜索下载：
+            </p>
+
+            <details style="margin-bottom: 15px;">
+                <summary style="cursor: pointer; color: #FFD700; padding: 10px; background: #333; border-radius: 5px;">
+                    <strong>显示完整游戏列表</strong>
+                </summary>
+                <div style="margin-top: 15px; background: #222; padding: 15px; border-radius: 5px; font-size: 11px; line-height: 2;">
+                    1. Super Mario Bros<br>
+                    2. Legend of Zelda<br>
+                    3. Contra<br>
+                    4. Tank Battle (Battle City)<br>
+                    5. Pac-Man<br>
+                    6. Donkey Kong<br>
+                    7. Mega Man<br>
+                    8. Castlevania<br>
+                    9. Metroid<br>
+                    10. Ninja Gaiden<br>
+                    11. Tetris<br>
+                    12. Bomberman<br>
+                    13. Ice Climber<br>
+                    14. Duck Hunt<br>
+                    15. Punch-Out<br>
+                    16. Final Fantasy<br>
+                    17. Dragon Quest<br>
+                    18. Kirby Adventure<br>
+                    19. Super Mario Bros 3<br>
+                    20. Metal Gear<br>
+                    21. Double Dragon<br>
+                    22. Renegade<br>
+                    23. Shadow of the Ninja<br>
+                    24. Rush'n Attack<br>
+                    25. Lode Runner<br>
+                    26. Solomon's Key<br>
+                    27. Bubble Bobble<br>
+                    28. Rainbow Islands<br>
+                    29. Legend of Kage<br>
+                    30. Chrono Trigger<br>
+                    31. Mario Golf<br>
+                    32. Mario Tennis<br>
+                    33. Excitebike<br>
+                    34. Street Basketball<br>
+                    35. World Cup (Track & Field)<br>
+                    36. Tecmo Bowl<br>
+                    37. Pinball<br>
+                    38. Balloon Fight<br>
+                    39. Journey to the West (Chinese game)<br>
+                    40. Mitsume Ga Tooru<br>
+                    41. Phoenix<br>
+                    42. Galaga<br>
+                    43. Space Invaders<br>
+                    44. 1942<br>
+                    45. Wrecking Crew<br>
+                    46. Mario Bros (original)<br>
+                    47. Helicopter<br>
+                    48. Kung Fu<br>
+                    49. Pooyan<br>
+                    50. Xevious<br>
+                    51. Adventure Island<br>
+                    52. Star Ocean (actually SNES, not NES)
+                </div>
+            </details>
+        </div>
+
+        <a href="index.html" class="back-btn">← 返回主页</a>
+
+        <footer style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #444; text-align: center; color: #666; font-size: 11px;">
+            <p>⚖️ 请合法获取ROM文件，尊重知识产权</p>
+            <p>仅供个人学习和研究使用</p>
+        </footer>
+    </div>
+</body>
+</html>

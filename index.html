@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>红白机游戏导航站 | NES Game Hub</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="nes-container">
+        <!-- Header -->
+        <header class="nes-header">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="nes-icon">
+                        <div class="controller">
+                            <div class="d-pad">
+                                <div class="cross"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <h1>红白机游戏站</h1>
+                    <p class="tagline">经典 · 回忆 · 畅玩</p>
+                </div>
+                <nav class="main-nav">
+                    <button class="nav-btn active" data-filter="all">全部游戏</button>
+                    <button class="nav-btn" data-filter="action">动作</button>
+                    <button class="nav-btn" data-filter="adventure">冒险</button>
+                    <button class="nav-btn" data-filter="shooter">射击</button>
+                    <button class="nav-btn" data-filter="puzzle">益智</button>
+                    <button class="nav-btn" data-filter="sports">运动</button>
+                    <button class="nav-btn" data-filter="rpg">角色扮演</button>
+                </nav>
+            </div>
+        </header>
+
+        <!-- Search & Features -->
+        <section class="search-section">
+            <div class="search-bar">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInput" placeholder="搜索游戏名称...">
+            </div>
+            <div class="feature-buttons">
+                <button class="feature-btn" id="favoritesBtn">
+                    <i class="fas fa-star"></i> 收藏夹
+                </button>
+                <button class="feature-btn" id="recentBtn">
+                    <i class="fas fa-history"></i> 最近玩过
+                </button>
+                <a href="roms.html" class="feature-btn" style="text-decoration: none;">
+                    <i class="fas fa-download"></i> ROM状态
+                </a>
+                <a href="roms-resources.html" class="feature-btn" style="text-decoration: none;">
+                    <i class="fas fa-globe"></i> 获取ROM
+                </a>
+            </div>
+        </section>
+
+        <!-- Stats -->
+        <section class="stats-section">
+            <div class="stat-item">
+                <span class="stat-number" id="totalGames">50+</span>
+                <span class="stat-label">游戏</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number" id="totalPlayed">0</span>
+                <span class="stat-label">已玩</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number" id="totalFavorites">0</span>
+                <span class="stat-label">收藏</span>
+            </div>
+        </section>
+
+        <!-- Game Grid -->
+        <main class="game-grid" id="gameGrid">
+            <!-- Games will be dynamically loaded here -->
+        </main>
+
+        <!-- Game Modal -->
+        <div class="modal" id="gameModal">
+            <div class="modal-content">
+                <span class="close-btn">&times;</span>
+                <div class="game-info">
+                    <h2 id="modalTitle">游戏名称</h2>
+                    <div class="game-meta">
+                        <span id="modalYear">1985</span>
+                        <span id="modalGenre">动作</span>
+                        <span id="modalPublisher">Nintendo</span>
+                    </div>
+                    <p id="modalDescription" class="game-description">游戏描述</p>
+                    <div class="game-stats">
+                        <div class="rating">
+                            <i class="fas fa-star"></i>
+                            <span id="modalRating">4.5</span>
+                        </div>
+                    </div>
+                    <button class="play-btn" id="playBtn">
+                        <i class="fas fa-play"></i> 开始游戏
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Emulator Modal -->
+        <div class="modal emulator-modal" id="emulatorModal">
+            <div class="modal-content emulator-content">
+                <div class="emulator-header">
+                    <h2 id="emuTitle">正在运行</h2>
+                    <button class="close-emu-btn">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="emulator-screen">
+                    <canvas id="nesCanvas"></canvas>
+                </div>
+                <div class="emulator-controls">
+                    <div class="control-group">
+                        <button class="control-btn" id="pauseBtn">
+                            <i class="fas fa-pause"></i> 暂停
+                        </button>
+                        <button class="control-btn" id="resetBtn">
+                            <i class="fas fa-redo"></i> 重置
+                        </button>
+                        <button class="control-btn" id="saveBtn">
+                            <i class="fas fa-save"></i> 存档
+                        </button>
+                        <button class="control-btn" id="loadBtn">
+                            <i class="fas fa-folder-open"></i> 读档
+                        </button>
+                        <button class="control-btn" id="muteBtn">
+                            <i class="fas fa-volume-up"></i>
+                        </button>
+                    </div>
+                    <div class="instructions">
+                        <p><strong>操作说明：</strong></p>
+                        <p>↑ ↓ ← → 方向键移动</p>
+                        <p>A 键：Z  |  B 键：X</p>
+                        <p>Start：Enter  |  Select：Shift</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="nes-footer">
+            <p>&copy; 2024 红白机游戏站 | 致敬经典</p>
+            <p class="disclaimer">所有游戏版权归原版权方所有</p>
+        </footer>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/games-data.js"></script>
+    <script src="js/emulator.js"></script>
+    <script>
+        // 动态加载JSNES库
+        (async function() {
+            const script = document.createElement('script');
+            script.src = '/js/jsnes.min.js?v=' + Date.now();
+
+            script.onload = async function() {
+                if (typeof jsnes !== 'undefined') {
+                    console.log('✅ JSNES库加载成功');
+                    // 加载app.js
+                    const appScript = document.createElement('script');
+                    appScript.src = '/js/app.js?v=' + Date.now();
+                    document.body.appendChild(appScript);
+                } else {
+                    alert('模拟器库加载失败');
+                }
+            };
+
+            script.onerror = function() {
+                alert('模拟器库加载失败，请刷新页面重试');
+            };
+
+            document.head.appendChild(script);
+        })();
+    </script>
+</body>
+</html>

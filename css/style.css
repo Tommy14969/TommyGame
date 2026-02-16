@@ -1,0 +1,705 @@
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --nes-red: #E60012;
+    --nes-dark-red: #C4000F;
+    --nes-gold: #FFD700;
+    --nes-black: #1a1a1a;
+    --nes-white: #ffffff;
+    --nes-gray: #808080;
+    --nes-light-gray: #f5f5f5;
+    --shadow-color: rgba(0, 0, 0, 0.3);
+}
+
+body {
+    font-family: 'Press Start 2P', 'Courier New', monospace;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    color: var(--nes-black);
+    overflow-x: hidden;
+}
+
+/* Container */
+.nes-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    background: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.3);
+}
+
+/* Header */
+.nes-header {
+    background: linear-gradient(135deg, var(--nes-red) 0%, var(--nes-dark-red) 100%);
+    color: var(--nes-white);
+    padding: 30px 20px;
+    box-shadow: 0 4px 20px var(--shadow-color);
+    position: relative;
+    overflow: hidden;
+}
+
+.nes-header::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -10%;
+    width: 300px;
+    height: 300px;
+    background: rgba(255, 215, 0, 0.1);
+    border-radius: 50%;
+    animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-20px) rotate(180deg); }
+}
+
+.header-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.logo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.nes-icon {
+    width: 80px;
+    height: 80px;
+    position: relative;
+}
+
+.controller {
+    width: 100%;
+    height: 100%;
+    background: var(--nes-gold);
+    border-radius: 10px;
+    position: relative;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.d-pad {
+    position: relative;
+    width: 40px;
+    height: 40px;
+}
+
+.cross {
+    width: 100%;
+    height: 100%;
+    background: var(--nes-black);
+    clip-path: polygon(
+        40% 0%, 60% 0%, 60% 40%, 100% 40%, 100% 60%, 60% 60%,
+        60% 100%, 40% 100%, 40% 60%, 0% 60%, 0% 40%, 40% 40%
+    );
+}
+
+.logo h1 {
+    font-size: 28px;
+    text-shadow: 2px 2px 0 var(--nes-black);
+    letter-spacing: 2px;
+    text-align: center;
+}
+
+.tagline {
+    font-size: 12px;
+    opacity: 0.9;
+    letter-spacing: 4px;
+}
+
+/* Navigation */
+.main-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+}
+
+.nav-btn {
+    background: rgba(255, 255, 255, 0.2);
+    border: 2px solid var(--nes-white);
+    color: var(--nes-white);
+    padding: 10px 18px;
+    font-family: inherit;
+    font-size: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-radius: 5px;
+    text-transform: uppercase;
+}
+
+.nav-btn:hover,
+.nav-btn.active {
+    background: var(--nes-white);
+    color: var(--nes-red);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px var(--shadow-color);
+}
+
+/* Search Section */
+.search-section {
+    padding: 30px 20px;
+    background: var(--nes-light-gray);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    align-items: center;
+    justify-content: center;
+}
+
+.search-bar {
+    display: flex;
+    align-items: center;
+    background: var(--nes-white);
+    border: 2px solid var(--nes-gray);
+    border-radius: 25px;
+    padding: 12px 20px;
+    width: 100%;
+    max-width: 500px;
+    transition: all 0.3s ease;
+}
+
+.search-bar:focus-within {
+    border-color: var(--nes-red);
+    box-shadow: 0 0 0 3px rgba(230, 0, 18, 0.1);
+}
+
+.search-bar i {
+    color: var(--nes-gray);
+    margin-right: 10px;
+}
+
+.search-bar input {
+    border: none;
+    outline: none;
+    flex: 1;
+    font-family: inherit;
+    font-size: 12px;
+}
+
+.feature-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.feature-btn {
+    background: var(--nes-gold);
+    color: var(--nes-black);
+    border: none;
+    padding: 12px 20px;
+    font-family: inherit;
+    font-size: 10px;
+    cursor: pointer;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.feature-btn:hover {
+    background: var(--nes-red);
+    color: var(--nes-white);
+    transform: translateY(-2px);
+}
+
+/* Stats Section */
+.stats-section {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    padding: 20px;
+    background: var(--nes-white);
+    border-bottom: 3px solid var(--nes-gray);
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-number {
+    display: block;
+    font-size: 32px;
+    font-weight: bold;
+    color: var(--nes-red);
+    text-shadow: 2px 2px 0 var(--nes-black);
+}
+
+.stat-label {
+    font-size: 10px;
+    color: var(--nes-gray);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+/* Game Grid */
+.game-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 25px;
+    padding: 40px 20px;
+    min-height: 400px;
+}
+
+.game-card {
+    background: var(--nes-white);
+    border: 3px solid var(--nes-black);
+    border-radius: 10px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    position: relative;
+}
+
+.game-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    background: linear-gradient(90deg, var(--nes-red), var(--nes-gold));
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
+.game-card:hover {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 15px 40px var(--shadow-color);
+    border-color: var(--nes-red);
+}
+
+.game-card:hover::before {
+    transform: scaleX(1);
+}
+
+.game-cover {
+    width: 100%;
+    height: 200px;
+    background: linear-gradient(135deg, var(--nes-red), var(--nes-dark-red));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.game-cover::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+        45deg,
+        transparent 30%,
+        rgba(255, 255, 255, 0.1) 50%,
+        transparent 70%
+    );
+    animation: shine 3s infinite;
+}
+
+@keyframes shine {
+    0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+    100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+}
+
+.game-cover i {
+    font-size: 60px;
+    color: var(--nes-white);
+    opacity: 0.3;
+    z-index: 1;
+}
+
+.game-info {
+    padding: 15px;
+}
+
+.game-title {
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 8px;
+    line-height: 1.4;
+    min-height: 40px;
+}
+
+.game-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+.game-tag {
+    background: var(--nes-light-gray);
+    color: var(--nes-gray);
+    padding: 4px 8px;
+    font-size: 8px;
+    border-radius: 3px;
+    text-transform: uppercase;
+}
+
+.game-rating {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: var(--nes-gold);
+    font-size: 12px;
+}
+
+.favorite-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.favorite-btn:hover {
+    transform: scale(1.2);
+}
+
+.favorite-btn.active {
+    color: var(--nes-red);
+}
+
+/* Modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.modal.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background: var(--nes-white);
+    border: 4px solid var(--nes-red);
+    border-radius: 15px;
+    padding: 30px;
+    max-width: 500px;
+    width: 90%;
+    position: relative;
+    animation: slideUp 0.3s ease;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.close-btn {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 28px;
+    cursor: pointer;
+    color: var(--nes-gray);
+    transition: all 0.3s ease;
+}
+
+.close-btn:hover {
+    color: var(--nes-red);
+    transform: rotate(90deg);
+}
+
+.game-info h2 {
+    color: var(--nes-red);
+    margin-bottom: 15px;
+    font-size: 24px;
+}
+
+.game-meta {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.game-meta span {
+    background: var(--nes-light-gray);
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 11px;
+}
+
+.game-description {
+    line-height: 1.6;
+    margin-bottom: 20px;
+    color: var(--nes-gray);
+    font-size: 12px;
+}
+
+.game-stats {
+    margin-bottom: 20px;
+}
+
+.rating {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 18px;
+    color: var(--nes-gold);
+}
+
+.play-btn {
+    width: 100%;
+    background: linear-gradient(135deg, var(--nes-red), var(--nes-dark-red));
+    color: var(--nes-white);
+    border: none;
+    padding: 15px;
+    font-family: inherit;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.play-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 30px rgba(230, 0, 18, 0.4);
+}
+
+/* Emulator Modal */
+.emulator-modal .modal-content {
+    max-width: 900px;
+}
+
+.emulator-content {
+    background: var(--nes-black);
+    border-color: var(--nes-gold);
+}
+
+.emulator-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.emulator-header h2 {
+    color: var(--nes-white);
+}
+
+.close-emu-btn {
+    background: var(--nes-red);
+    color: var(--nes-white);
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 18px;
+    transition: all 0.3s ease;
+}
+
+.close-emu-btn:hover {
+    transform: rotate(90deg) scale(1.1);
+}
+
+.emulator-screen {
+    background: #000;
+    border: 4px solid var(--nes-gray);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#nesCanvas {
+    width: 768px !important;
+    height: 720px !important;
+    max-width: 100%;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+    image-rendering: pixelated;
+}
+
+.emulator-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.control-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+}
+
+.control-btn {
+    background: var(--nes-gray);
+    color: var(--nes-white);
+    border: none;
+    padding: 12px 20px;
+    font-family: inherit;
+    font-size: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.control-btn:hover {
+    background: var(--nes-red);
+    transform: translateY(-2px);
+}
+
+.instructions {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 15px;
+    border-radius: 5px;
+    color: var(--nes-white);
+    font-size: 10px;
+    line-height: 1.8;
+}
+
+/* Footer */
+.nes-footer {
+    background: var(--nes-black);
+    color: var(--nes-white);
+    text-align: center;
+    padding: 30px 20px;
+    margin-top: 40px;
+}
+
+.nes-footer p {
+    margin: 5px 0;
+    font-size: 10px;
+    opacity: 0.8;
+}
+
+.disclaimer {
+    font-size: 8px;
+    opacity: 0.5;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .logo h1 {
+        font-size: 20px;
+    }
+
+    .game-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 15px;
+        padding: 20px 10px;
+    }
+
+    .game-cover {
+        height: 150px;
+    }
+
+    .stats-section {
+        gap: 20px;
+    }
+
+    .stat-number {
+        font-size: 24px;
+    }
+
+    .nav-btn {
+        padding: 8px 12px;
+        font-size: 8px;
+    }
+
+    .modal-content {
+        padding: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .game-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .search-section {
+        flex-direction: column;
+    }
+
+    .feature-buttons {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* Loading Animation */
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+.loading {
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--nes-light-gray);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--nes-red);
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--nes-dark-red);
+}

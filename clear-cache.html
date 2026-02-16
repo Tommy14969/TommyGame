@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>清除缓存 - NES Game Hub</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 600px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 32px;
+        }
+        .status {
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 2px solid #c3e6cb;
+        }
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 2px solid #f5c6cb;
+        }
+        .step {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+        .step h3 {
+            color: #495057;
+            margin-bottom: 10px;
+        }
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 18px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+        }
+        button:hover {
+            background: #5568d3;
+        }
+        .code {
+            background: #212529;
+            color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            margin: 10px 0;
+        }
+        #checkResult {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 缓存清除助手</h1>
+
+        <div class="status success" id="serverStatus">
+            ✅ 服务器运行正常
+        </div>
+
+        <div class="step">
+            <h3>第1步：强制刷新浏览器</h3>
+            <p>点击下面的按钮，或者按键盘快捷键：</p>
+            <div class="code">Ctrl + Shift + R</div>
+            <button onclick="location.reload()">🔄 重新加载页面</button>
+        </div>
+
+        <div class="step">
+            <h3>第2步：检查JSNES库加载状态</h3>
+            <button onclick="checkJSNES()">✅ 检查加载状态</button>
+            <div id="checkResult"></div>
+        </div>
+
+        <div class="step">
+            <h3>第3步：跳转到主页</h3>
+            <button onclick="goToMain()">🎮 前往游戏主页</button>
+        </div>
+
+        <div class="step">
+            <h3>如果以上都不行</h3>
+            <p>请尝试：</p>
+            <ol style="margin-left: 20px; line-height: 1.8;">
+                <li>按 <strong>Ctrl + Shift + Delete</strong></li>
+                <li>选择"缓存的图片和文件"</li>
+                <li>点击"清除数据"</li>
+                <li>关闭浏览器，重新打开</li>
+                <li>访问: http://localhost:8000</li>
+            </ol>
+        </div>
+    </div>
+
+    <script>
+        // 检查JSNES是否加载
+        function checkJSNES() {
+            const resultDiv = document.getElementById('checkResult');
+
+            // 尝试加载jsnes.min.js
+            fetch('/js/jsnes.min.js?v=' + Date.now())
+                .then(response => {
+                    if (response.ok) {
+                        return response.text();
+                    }
+                    throw new Error('文件加载失败');
+                })
+                .then(content => {
+                    // 检查内容是否是JavaScript
+                    if (content.includes('jsnes') && content.includes('function')) {
+                        resultDiv.innerHTML = `
+                            <div class="status success">
+                                ✅ JSNES库加载成功！<br>
+                                文件大小: ${content.length} 字节<br>
+                                内容正确: 是JavaScript代码
+                            </div>
+                        `;
+                    } else {
+                        resultDiv.innerHTML = `
+                            <div class="status error">
+                                ❌ 文件内容错误！<br>
+                                文件不是有效的JavaScript代码
+                            </div>
+                        `;
+                    }
+                })
+                .catch(error => {
+                    resultDiv.innerHTML = `
+                        <div class="status error">
+                            ❌ 加载失败！<br>
+                            错误: ${error.message}
+                        </div>
+                    `;
+                });
+        }
+
+        // 跳转到主页
+        function goToMain() {
+            // 添加时间戳避免缓存
+            window.location.href = '/?t=' + Date.now();
+        }
+
+        // 页面加载时自动检查
+        window.addEventListener('load', function() {
+            console.log('缓存清除助手已加载');
+            console.log('当前时间:', new Date().toLocaleString());
+        });
+    </script>
+</body>
+</html>

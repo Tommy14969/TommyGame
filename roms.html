@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ROM文件状态 - NES Game Hub</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: #1a1a1a;
+            color: #fff;
+            padding: 40px 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: #E60012;
+            font-size: 32px;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 0 #fff;
+        }
+
+        .subtitle {
+            color: #FFD700;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .status-box {
+            background: #2a2a2a;
+            border: 3px solid #E60012;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #444;
+        }
+
+        .status-item:last-child {
+            border-bottom: none;
+        }
+
+        .status-label {
+            color: #888;
+            font-size: 12px;
+        }
+
+        .status-value {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .status-value.present {
+            color: #32CD32;
+        }
+
+        .status-value.missing {
+            color: #FF6347;
+        }
+
+        .rom-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .rom-item {
+            background: #333;
+            padding: 10px 15px;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 11px;
+        }
+
+        .rom-item.has-rom {
+            border-left: 4px solid #32CD32;
+        }
+
+        .rom-item.missing-rom {
+            border-left: 4px solid #FF6347;
+        }
+
+        .rom-status {
+            font-size: 16px;
+        }
+
+        .rom-status.has {
+            color: #32CD32;
+        }
+
+        .rom-status.missing {
+            color: #FF6347;
+        }
+
+        .instructions {
+            background: #FFD700;
+            color: #000;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+
+        .instructions h2 {
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+
+        .instructions ol {
+            margin-left: 20px;
+        }
+
+        .instructions li {
+            margin-bottom: 10px;
+        }
+
+        .instructions a {
+            color: #E60012;
+            font-weight: bold;
+        }
+
+        .back-btn {
+            display: inline-block;
+            background: #E60012;
+            color: #fff;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+
+        .back-btn:hover {
+            background: #C4000F;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎮 ROM文件状态</h1>
+        <p class="subtitle">NES Game Hub - ROM文件检查工具</p>
+
+        <div class="status-box">
+            <div class="status-item">
+                <span class="status-label">总游戏数</span>
+                <span class="status-value" id="totalGames">52</span>
+            </div>
+            <div class="status-item">
+                <span class="status-label">已找到ROM</span>
+                <span class="status-value present" id="presentCount">0</span>
+            </div>
+            <div class="status-item">
+                <span class="status-label">缺失ROM</span>
+                <span class="status-value missing" id="missingCount">52</span>
+            </div>
+            <div class="status-item">
+                <span class="status-label">完成度</span>
+                <span class="status-value" id="percentage">0%</span>
+            </div>
+        </div>
+
+        <div class="instructions">
+            <h2>📥 如何添加ROM文件</h2>
+            <ol>
+                <li><strong>合法获取ROM：</strong>访问 <a href="https://archive.org/details/softwarelibrary_mame" target="_blank">Internet Archive</a> 或从您拥有的正版卡带提取</li>
+                <li><strong>下载ROM文件：</strong>搜索游戏英文名称（如 "Super Mario Bros"）</li>
+                <li><strong>重命名文件：</strong>按照下方列表中的文件名重命名</li>
+                <li><strong>放入目录：</strong>将文件放入 <code>roms/</code> 目录</li>
+                <li><strong>刷新页面：</strong>重新加载主页面即可游玩</li>
+            </ol>
+            <p style="margin-top: 15px; font-size: 11px;">
+                ⚠️ <strong>重要提示：</strong>ROM文件受版权保护，仅供个人学习研究使用。
+                请勿用于商业用途，并在24小时内删除未授权的ROM。
+            </p>
+        </div>
+
+        <h2 style="color: #FFD700; margin-bottom: 15px;">📋 ROM文件清单</h2>
+        <div class="rom-list" id="romList">
+            <!-- ROM列表将由JavaScript生成 -->
+        </div>
+
+        <a href="index.html" class="back-btn">← 返回游戏列表</a>
+    </div>
+
+    <script>
+        // ROM文件清单
+        const romFiles = [
+            { id: 1, title: "Super Mario Bros", titleZh: "超级马里奥兄弟", category: "action" },
+            { id: 2, title: "Legend of Zelda", titleZh: "塞尔达传说", category: "adventure" },
+            { id: 3, title: "Contra", titleZh: "魂斗罗", category: "shooter" },
+            { id: 4, title: "Tank Battle", titleZh: "坦克大战", category: "action" },
+            { id: 5, title: "Pac-Man", titleZh: "吃豆人", category: "puzzle" },
+            { id: 6, title: "Donkey Kong", titleZh: "大金刚", category: "action" },
+            { id: 7, title: "Mega Man", titleZh: "洛克人", category: "action" },
+            { id: 8, title: "Castlevania", titleZh: "恶魔城", category: "action" },
+            { id: 9, title: "Metroid", titleZh: "银河战士", category: "adventure" },
+            { id: 10, title: "Ninja Gaiden", titleZh: "忍者龙剑传", category: "action" },
+            { id: 11, title: "Tetris", titleZh: "俄罗斯方块", category: "puzzle" },
+            { id: 12, title: "Bomberman", titleZh: "炸弹人", category: "action" },
+            { id: 13, title: "Ice Climber", titleZh: "冰山登山者", category: "action" },
+            { id: 14, title: "Duck Hunt", titleZh: "打鸭子", category: "shooter" },
+            { id: 15, title: "Punch-Out", titleZh: "拳无虚发", category: "sports" },
+            { id: 16, title: "Final Fantasy", titleZh: "最终幻想", category: "rpg" },
+            { id: 17, title: "Dragon Quest", titleZh: "勇者斗恶龙", category: "rpg" },
+            { id: 18, title: "Kirby Adventure", titleZh: "星之卡比", category: "action" },
+            { id: 19, title: "Super Mario Bros 3", titleZh: "马里奥兄弟3", category: "action" },
+            { id: 20, title: "Metal Gear", titleZh: "合金装备", category: "adventure" },
+            { id: 21, title: "Double Dragon", titleZh: "双截龙", category: "action" },
+            { id: 22, title: "Renegade", titleZh: "热血硬派", category: "action" },
+            { id: 23, title: "Shadow of the Ninja", titleZh: "赤影战士", category: "action" },
+            { id: 24, title: "Rush n Attack", titleZh: "绿色兵团", category: "action" },
+            { id: 25, title: "Lode Runner", titleZh: "淘金者", category: "puzzle" },
+            { id: 26, title: "Solomons Key", titleZh: "所罗门之钥", category: "puzzle" },
+            { id: 27, title: "Bubble Bobble", titleZh: "泡泡龙", category: "action" },
+            { id: 28, title: "Rainbow Islands", titleZh: "彩虹岛", category: "action" },
+            { id: 29, title: "Legend of Kage", titleZh: "影之传说", category: "action" },
+            { id: 30, title: "Chrono Trigger", titleZh: "时空之轮", category: "rpg" },
+            { id: 31, title: "Mario Golf", titleZh: "马里奥高尔夫", category: "sports" },
+            { id: 32, title: "Mario Tennis", titleZh: "马里奥网球", category: "sports" },
+            { id: 33, title: "Excitebike", titleZh: "越野机车", category: "sports" },
+            { id: 34, title: "Street Basketball", titleZh: "街头篮球", category: "sports" },
+            { id: 35, title: "World Cup", titleZh: "世界杯", category: "sports" },
+            { id: 36, title: "Tecmo Bowl", titleZh: "橄榄球", category: "sports" },
+            { id: 37, title: "Pinball", titleZh: "弹珠台", category: "action" },
+            { id: 38, title: "Balloon Fight", titleZh: "气球大战", category: "action" },
+            { id: 39, title: "Journey to the West", titleZh: "西天取经", category: "action" },
+            { id: 40, title: "Mitsume Ga Tooru", titleZh: "三眼神童", category: "action" },
+            { id: 41, title: "Phoenix", titleZh: "火之鸟", category: "shooter" },
+            { id: 42, title: "Galaga", titleZh: "小蜜蜂", category: "shooter" },
+            { id: 43, title: "Space Invaders", titleZh: "太空侵略者", category: "shooter" },
+            { id: 44, title: "1942", titleZh: "1942", category: "shooter" },
+            { id: 45, title: "Wrecking Crew", titleZh: "拆毁大队", category: "action" },
+            { id: 46, title: "Mario Bros", titleZh: "马里奥兄弟", category: "action" },
+            { id: 47, title: "Helicopter", titleZh: "直升机", category: "action" },
+            { id: 48, title: "Kung Fu", titleZh: "功夫", category: "action" },
+            { id: 49, title: "Pooyan", titleZh: "猪小弟", category: "action" },
+            { id: 50, title: "Xevious", titleZh: "大蜜蜂", category: "shooter" },
+            { id: 51, title: "Adventure Island", titleZh: "冒险岛", category: "action" },
+            { id: 52, title: "Star Ocean", titleZh: "星之海洋", category: "rpg" }
+        ];
+
+        // 检查ROM文件是否存在（客户端无法直接检查，需要服务器支持）
+        // 这里显示所有ROM为缺失状态
+        async function checkROMStatus() {
+            let presentCount = 0;
+            const romListEl = document.getElementById('romList');
+
+            for (const rom of romFiles) {
+                const fileName = `${rom.id}-${rom.title.replace(/\s+/g, '_')}.nes`;
+
+                // 尝试检查文件是否存在
+                try {
+                    const response = await fetch(`roms/${fileName}`, { method: 'HEAD' });
+                    const exists = response.ok;
+
+                    if (exists) presentCount++;
+
+                    const romItem = document.createElement('div');
+                    romItem.className = `rom-item ${exists ? 'has-rom' : 'missing-rom'}`;
+                    romItem.innerHTML = `
+                        <span class="rom-status ${exists ? 'has' : 'missing'}">
+                            ${exists ? '✓' : '✗'}
+                        </span>
+                        <div>
+                            <strong>${fileName}</strong><br>
+                            <span style="color: #888;">${rom.titleZh}</span>
+                        </div>
+                    `;
+                    romListEl.appendChild(romItem);
+                } catch (error) {
+                    // 文件不存在
+                    const romItem = document.createElement('div');
+                    romItem.className = 'rom-item missing-rom';
+                    romItem.innerHTML = `
+                        <span class="rom-status missing">✗</span>
+                        <div>
+                            <strong>${fileName}</strong><br>
+                            <span style="color: #888;">${rom.titleZh}</span>
+                        </div>
+                    `;
+                    romListEl.appendChild(romItem);
+                }
+            }
+
+            // 更新统计
+            document.getElementById('presentCount').textContent = presentCount;
+            document.getElementById('missingCount').textContent = 52 - presentCount;
+            document.getElementById('percentage').textContent = Math.round((presentCount / 52) * 100) + '%';
+        }
+
+        // 页面加载时检查ROM状态
+        checkROMStatus();
+    </script>
+</body>
+</html>
