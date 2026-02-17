@@ -25,18 +25,6 @@ const gamesDatabase = [
         color: "#32CD32"
     },
 {
-        id: 3,
-        title: "魂斗罗",
-        titleEn: "Contra",
-        year: 1987,
-        publisher: "Konami",
-        genre: "shooter",
-        rating: 4.8,
-        description: "经典的横向卷轴射击游戏，两名精英士兵对抗外星入侵者。",
-        icon: "fa-crosshairs",
-        color: "#FF4500"
-    },
-{
         id: 4,
         title: "坦克大战",
         titleEn: "Battle_City",
