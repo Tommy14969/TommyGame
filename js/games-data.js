@@ -39,7 +39,7 @@ const gamesDatabase = [
 {
         id: 4,
         title: "坦克大战",
-        titleEn: "Tank Battle",
+        titleEn: "Battle_City",
         year: 1985,
         publisher: "Namco",
         genre: "action",

@@ -71,7 +71,14 @@ class NESEmulator {
             return true;
         } catch (error) {
             console.error('Failed to load ROM:', error);
-            this.showError('ROM加载失败: ' + error.message);
+            const errorMsg = error.message || '';
+
+            // Check for mapper error
+            if (errorMsg.includes('mapper') || errorMsg.includes('Mapper')) {
+                this.showError('❌ Mapper不支持\n\n此游戏使用了JSNES不支持的Mapper。\n\n请尝试其他版本的ROM。');
+            } else {
+                this.showError('ROM加载失败: ' + errorMsg);
+            }
             return false;
         }
     }
