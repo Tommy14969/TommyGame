@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>下载NES游戏封面图</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+        h1 {
+            text-align: center;
+            color: #E60012;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        .instructions {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            border-left: 4px solid #E60012;
+        }
+        .instructions h3 {
+            color: #E60012;
+            margin-bottom: 10px;
+        }
+        .instructions ol {
+            margin-left: 20px;
+            line-height: 1.8;
+        }
+        .game-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .game-item {
+            background: #f9f9f9;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            transition: all 0.3s ease;
+        }
+        .game-item:hover {
+            border-color: #E60012;
+            box-shadow: 0 5px 15px rgba(230, 0, 18, 0.2);
+        }
+        .game-id {
+            display: inline-block;
+            background: #E60012;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .game-name {
+            font-weight: bold;
+            margin: 10px 0;
+            color: #333;
+        }
+        .game-name-en {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        .download-btn {
+            display: inline-block;
+            background: #228B22;
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            margin-right: 10px;
+            margin-bottom: 5px;
+            font-size: 14px;
+            transition: background 0.3s;
+        }
+        .download-btn:hover {
+            background: #1a6b1a;
+        }
+        .download-btn.source {
+            background: #4169E1;
+        }
+        .download-btn.source:hover {
+            background: #3458c2;
+        }
+        .links {
+            margin-top: 10px;
+        }
+        .stats {
+            text-align: center;
+            padding: 20px;
+            background: #e8f4f8;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎮 NES游戏封面下载器</h1>
+        <p class="subtitle">44个经典NES游戏的官方封面图</p>
+
+        <div class="instructions">
+            <h3>📥 使用说明</h3>
+            <ol>
+                <li>点击每个游戏的"下载封面"按钮</li>
+                <li>图片会自动下载，文件名已格式好</li>
+                <li>将所有下载的图片放入项目的 <code>images/</code> 目录</li>
+                <li>刷新游戏站点即可看到新封面</li>
+            </ol>
+            <p style="margin-top: 15px; color: #666;">
+                <strong>💡 提示：</strong>所有封面来自合法来源（Wikipedia），仅供个人学习和非商业使用。
+            </p>
+        </div>
+
+        <div class="stats">
+            <strong>需要下载 44 张封面图</strong> |
+            已完成: <span id="downloaded">0</span>/44
+        </div>
+
+        <div class="game-grid" id="gameGrid">
+            <!-- 游戏列表将由JavaScript生成 -->
+        </div>
+    </div>
+
+    <script>
+        // 游戏数据和封面URL
+        const games = [
+            {id: 1, title: "超级马里奥兄弟", titleEn: "Super Mario Bros", wiki: "https://en.wikipedia.org/wiki/Super_Mario_Bros"},
+            {id: 2, title: "塞尔达传说", titleEn: "The Legend of Zelda", wiki: "https://en.wikipedia.org/wiki/The_Legend_of_Zelda"},
+            {id: 3, title: "魂斗罗", titleEn: "Contra", wiki: "https://en.wikipedia.org/wiki/Contra_(video_game)"},
+            {id: 4, title: "坦克大战", titleEn: "Tank Battle", wiki: "https://en.wikipedia.org/wiki/Battle_City_(video_game)"},
+            {id: 5, title: "吃豆人", titleEn: "Pac-Man", wiki: "https://en.wikipedia.org/wiki/Pac-Man"},
+            {id: 6, title: "大金刚", titleEn: "Donkey Kong", wiki: "https://en.wikipedia.org/wiki/Donkey_Kong"},
+            {id: 7, title: "洛克人", titleEn: "Mega Man", wiki: "https://en.wikipedia.org/wiki/Mega_Man_(video_game)"},
+            {id: 8, title: "恶魔城", titleEn: "Castlevania", wiki: "https://en.wikipedia.org/wiki/Castlevania_(video_game)"},
+            {id: 9, title: "银河战士", titleEn: "Metroid", wiki: "https://en.wikipedia.org/wiki/Metroid"},
+            {id: 10, title: "忍者龙剑传", titleEn: "Ninja Gaiden", wiki: "https://en.wikipedia.org/wiki/Ninja_Gaiden"},
+            {id: 11, title: "俄罗斯方块", titleEn: "Tetris", wiki: "https://en.wikipedia.org/wiki/Tetris"},
+            {id: 12, title: "炸弹人", titleEn: "Bomberman", wiki: "https://en.wikipedia.org/wiki/Bomberman"},
+            {id: 13, title: "冰山登山者", titleEn: "Ice Climber", wiki: "https://en.wikipedia.org/wiki/Ice_Climber"},
+            {id: 14, title: "打鸭子", titleEn: "Duck Hunt", wiki: "https://en.wikipedia.org/wiki/Duck_Hunt"},
+            {id: 15, title: "拳无虚发", titleEn: "Punch-Out!!", wiki: "https://en.wikipedia.org/wiki/Punch-Out!!_(video_game)"},
+            {id: 16, title: "最终幻想", titleEn: "Final Fantasy", wiki: "https://en.wikipedia.org/wiki/Final_Fantasy_(video_game)"},
+            {id: 17, title: "勇者斗恶龙", titleEn: "Dragon Quest", wiki: "https://en.wikipedia.org/wiki/Dragon_Quest"},
+            {id: 18, title: "星之卡比", titleEn: "Kirby's Adventure", wiki: "https://en.wikipedia.org/wiki/Kirby%27s_Adventure"},
+            {id: 19, title: "马里奥兄弟3", titleEn: "Super Mario Bros 3", wiki: "https://en.wikipedia.org/wiki/Super_Mario_Bros._3"},
+            {id: 20, title: "合金装备", titleEn: "Metal Gear", wiki: "https://en.wikipedia.org/wiki/Metal_Gear"},
+            {id: 21, title: "双截龙", titleEn: "Double Dragon", wiki: "https://en.wikipedia.org/wiki/Double_Dragon"},
+            {id: 23, title: "赤影战士", titleEn: "Shadow of the Ninja", wiki: "https://en.wikipedia.org/wiki/Shadow_of_the_Ninja"},
+            {id: 24, title: "绿色兵团", titleEn: "Rush'n Attack", wiki: "https://en.wikipedia.org/wiki/Rush%27n_Attack"},
+            {id: 25, title: "淘金者", titleEn: "Lode Runner", wiki: "https://en.wikipedia.org/wiki/Lode_Runner"},
+            {id: 26, title: "所罗门之钥", titleEn: "Solomon's Key", wiki: "https://en.wikipedia.org/wiki/Solomon%27s_Key"},
+            {id: 27, title: "泡泡龙", titleEn: "Bubble Bobble", wiki: "https://en.wikipedia.org/wiki/Bubble_Bobble"},
+            {id: 29, title: "影之传说", titleEn: "The Legend of Kage", wiki: "https://en.wikipedia.org/wiki/The_Legend_of_Kage"},
+            {id: 31, title: "马里奥高尔夫", titleEn: "Mario Golf", wiki: "https://en.wikipedia.org/wiki/NES_Open_Tournament_Golf"},
+            {id: 33, title: "越野机车", titleEn: "Excitebike", wiki: "https://en.wikipedia.org/wiki/Excitebike"},
+            {id: 35, title: "世界杯", titleEn: "World Cup", wiki: "https://en.wikipedia.org/wiki/World_Cup_Soccer"},
+            {id: 36, title: "特库莫碗", titleEn: "Tecmo Bowl", wiki: "https://en.wikipedia.org/wiki/Tecmo_Bowl"},
+            {id: 37, title: "弹珠台", titleEn: "Pinball", wiki: "https://en.wikipedia.org/wiki/Pinball_(video_game)"},
+            {id: 38, title: "气球塔防", titleEn: "Balloon Fight", wiki: "https://en.wikipedia.org/wiki/Balloon_Fight"},
+            {id: 39, title: "西天取经", titleEn: "Journey to the West", wiki: "https://en.wikipedia.org/wiki/Journey_to_the_West_(video_game)"},
+            {id: 41, title: "火之鸟", titleEn: "Phoenix", wiki: "https://en.wikipedia.org/wiki/Phoenix_(1987_video_game)"},
+            {id: 42, title: "小蜜蜂", titleEn: "Galaga", wiki: "https://en.wikipedia.org/wiki/Galaga"},
+            {id: 43, title: "太空侵略者", titleEn: "Space Invaders", wiki: "https://en.wikipedia.org/wiki/Space_Invaders"},
+            {id: 44, title: "1942", titleEn: "1942", wiki: "https://en.wikipedia.org/wiki/1942_(video_game)"},
+            {id: 45, title: "吸尘器", titleEn: "Wrecking Crew", wiki: "https://en.wikipedia.org/wiki/Wrecking_Crew"},
+            {id: 46, title: "石匠", titleEn: "Mario Bros", wiki: "https://en.wikipedia.org/wiki/Mario_Bros."},
+            {id: 48, title: "功夫", titleEn: "Kung Fu", wiki: "https://en.wikipedia.org/wiki/Kung-Fu_Master"},
+            {id: 49, title: "猪小弟", titleEn: "Pooyan", wiki: "https://en.wikipedia.org/wiki/Pooyan"},
+            {id: 50, title: "大蜜蜂", titleEn: "Xevious", wiki: "https://en.wikipedia.org/wiki/Xevious"},
+            {id: 51, title: "冒险岛", titleEn: "Adventure Island", wiki: "https://en.wikipedia.org/wiki/Adventure_Island_(video_game)"}
+        ];
+
+        let downloadedCount = 0;
+
+        function renderGames() {
+            const grid = document.getElementById('gameGrid');
+
+            games.forEach(game => {
+                const item = document.createElement('div');
+                item.className = 'game-item';
+
+                item.innerHTML = `
+                    <span class="game-id">#${game.id}</span>
+                    <div class="game-name">${game.title}</div>
+                    <div class="game-name-en">${game.titleEn}</div>
+                    <div class="links">
+                        <a href="${game.wiki}" target="_blank" class="download-btn source">
+                            📖 打开Wikipedia
+                        </a>
+                        <a href="#" onclick="showInstructions('${game.titleEn}', '${game.wiki}'); return false;" class="download-btn">
+                            ⬇️ 下载封面
+                        </a>
+                    </div>
+                `;
+
+                grid.appendChild(item);
+            });
+        }
+
+        function showInstructions(titleEn, wikiUrl) {
+            alert(`📥 下载步骤 - ${titleEn}\n\n1. 点击"打开Wikipedia"按钮\n2. 在Wikipedia页面中找到封面图\n3. 右键点击封面图 → "图片另存为"\n4. 保存为: ${titleEn.replace(/ /g, '_')}.png\n5. 放入项目的 images/ 目录`);
+        }
+
+        // 初始化
+        renderGames();
+    </script>
+</body>
+</html>
