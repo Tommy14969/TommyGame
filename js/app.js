@@ -469,19 +469,20 @@ class NESGameStation {
                 return;
             }
 
-            // NES Controls
+            // NES Controls - normalize key to lowercase
+            const key = e.key.toLowerCase();
             const keyMap = {
-                'ArrowUp': 'up',
-                'ArrowDown': 'down',
-                'ArrowLeft': 'left',
-                'ArrowRight': 'right',
+                'arrowup': 'up',
+                'arrowdown': 'down',
+                'arrowleft': 'left',
+                'arrowright': 'right',
                 'z': 'a',
                 'x': 'b',
-                'Enter': 'start',
-                'Shift': 'select'
+                'enter': 'start',
+                'shift': 'select'
             };
 
-            const action = keyMap[e.key];
+            const action = keyMap[key];
             if (action) {
                 e.preventDefault();
                 this.handleNESInput(action, true);
@@ -493,18 +494,20 @@ class NESGameStation {
                 return;
             }
 
+            // NES Controls - normalize key to lowercase
+            const key = e.key.toLowerCase();
             const keyMap = {
-                'ArrowUp': 'up',
-                'ArrowDown': 'down',
-                'ArrowLeft': 'left',
-                'ArrowRight': 'right',
+                'arrowup': 'up',
+                'arrowdown': 'down',
+                'arrowleft': 'left',
+                'arrowright': 'right',
                 'z': 'a',
                 'x': 'b',
-                'Enter': 'start',
-                'Shift': 'select'
+                'enter': 'start',
+                'shift': 'select'
             };
 
-            const action = keyMap[e.key];
+            const action = keyMap[key];
             if (action) {
                 this.handleNESInput(action, false);
             }
