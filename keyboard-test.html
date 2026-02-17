@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>键盘控制测试</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 600px;
+            width: 100%;
+        }
+        h1 {
+            text-align: center;
+            color: #E60012;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+        }
+        .key-display {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        .key-item {
+            background: #f5f5f5;
+            border: 3px solid #ddd;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.2s;
+        }
+        .key-item.active {
+            background: #00ff88;
+            border-color: #00cc6a;
+            transform: scale(1.05);
+        }
+        .key-name {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .key-action {
+            font-size: 14px;
+            color: #666;
+        }
+        .test-key {
+            background: #e8f4f8;
+            border: 2px dashed #4a90a4;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        .test-key.active {
+            background: #ffeb3b;
+            border-color: #f39c12;
+        }
+        .log {
+            background: #1a1a2e;
+            color: #00ff88;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .log-item {
+            margin: 5px 0;
+        }
+        .info {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎮 NES键盘控制测试</h1>
+        <p class="subtitle">测试您的键盘按键是否正常工作</p>
+
+        <div class="info">
+            <strong>📋 测试说明：</strong>
+            <ul style="margin-left: 20px; margin-top: 10px;">
+                <li>按下键盘上的对应按键</li>
+                <li>如果按键检测正常，对应的方块会变绿</li>
+                <li>下方会显示按键的详细信息</li>
+            </ul>
+        </div>
+
+        <div class="key-display">
+            <div class="key-item" id="key-up">
+                <div class="key-name">↑</div>
+                <div class="key-action">上</div>
+            </div>
+            <div class="key-item" id="key-z">
+                <div class="key-name">Z</div>
+                <div class="key-action">A键</div>
+            </div>
+            <div class="key-item" id="key-x">
+                <div class="key-name">X</div>
+                <div class="key-action">B键</div>
+            </div>
+            <div class="key-item" id="key-down">
+                <div class="key-name">↓</div>
+                <div class="key-action">下</div>
+            </div>
+            <div class="key-item" id="key-enter">
+                <div class="key-name">Enter</div>
+                <div class="key-action">Start</div>
+            </div>
+            <div class="key-item" id="key-shift">
+                <div class="key-name">Shift</div>
+                <div class="key-action">Select</div>
+            </div>
+            <div class="key-item" id="key-left">
+                <div class="key-name">←</div>
+                <div class="key-action">左</div>
+            </div>
+            <div class="key-item" id="key-right">
+                <div class="key-name">→</div>
+                <div class="key-action">右</div>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-bottom: 20px;">
+            <h3 style="margin-bottom: 10px;">按键检测日志：</h3>
+        </div>
+
+        <div class="log" id="log">
+            <div class="log-item">等待按键输入...</div>
+        </div>
+    </div>
+
+    <script>
+        const logDiv = document.getElementById('log');
+        let logCount = 0;
+
+        function addLog(message) {
+            const item = document.createElement('div');
+            item.className = 'log-item';
+            item.textContent = `[${logCount++}] ${message}`;
+            logDiv.appendChild(item);
+            logDiv.scrollTop = logDiv.scrollHeight;
+
+            // Limit log entries
+            if (logDiv.children.length > 50) {
+                logDiv.removeChild(logDiv.firstChild);
+            }
+        }
+
+        function highlightKey(keyId) {
+            const element = document.getElementById(keyId);
+            if (element) {
+                element.classList.add('active');
+                setTimeout(() => element.classList.remove('active'), 500);
+            }
+        }
+
+        document.addEventListener('keydown', (e) => {
+            const key = e.key;
+            const code = e.code;
+
+            addLog(`按下: key="${key}" code="${code}"`);
+
+            // Highlight corresponding visual key
+            switch(key.toLowerCase()) {
+                case 'arrowup':
+                case 'up':
+                    highlightKey('key-up');
+                    break;
+                case 'arrowdown':
+                case 'down':
+                    highlightKey('key-down');
+                    break;
+                case 'arrowleft':
+                case 'left':
+                    highlightKey('key-left');
+                    break;
+                case 'arrowright':
+                case 'right':
+                    highlightKey('key-right');
+                    break;
+                case 'z':
+                    highlightKey('key-z');
+                    addLog('✅ Z键检测成功 -> A按钮');
+                    break;
+                case 'x':
+                    highlightKey('key-x');
+                    addLog('✅ X键检测成功 -> B按钮');
+                    break;
+                case 'enter':
+                    highlightKey('key-enter');
+                    break;
+                case 'shift':
+                    highlightKey('key-shift');
+                    break;
+            }
+
+            // Prevent default for game keys
+            if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' '].includes(key)) {
+                e.preventDefault();
+            }
+        });
+
+        document.addEventListener('keyup', (e) => {
+            const key = e.key;
+            addLog(`释放: key="${key}"`);
+        });
+
+        addLog('键盘测试已启动，请按下按键...');
+        addLog('重点测试：Z键和X键');
+    </script>
+</body>
+</html>
