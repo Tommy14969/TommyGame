@@ -289,7 +289,6 @@ body {
 .game-cover {
     width: 100%;
     height: 200px;
-    background: linear-gradient(135deg, var(--nes-red), var(--nes-dark-red));
     display: flex;
     align-items: center;
     justify-content: center;
@@ -297,7 +296,20 @@ body {
     overflow: hidden;
 }
 
-.game-cover::after {
+/* Image-based cover */
+.game-cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* Fallback gradient when no image */
+.game-cover.fallback {
+    background: linear-gradient(135deg, var(--nes-red), var(--nes-dark-red));
+}
+
+.game-cover.fallback::after {
     content: '';
     position: absolute;
     top: -50%;

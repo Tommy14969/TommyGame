@@ -43,12 +43,16 @@ class NESGameStation {
 
         const isFavorite = this.favorites.includes(game.id);
 
+        // Construct image path
+        const imagePath = `images/${game.id}-${game.titleEn.replace(/\s+/g, '_')}.png`;
+
         card.innerHTML = `
             <button class="favorite-btn ${isFavorite ? 'active' : ''}" data-id="${game.id}">
                 <i class="fas fa-star"></i>
             </button>
-            <div class="game-cover" style="background: linear-gradient(135deg, ${game.color}, ${this.adjustColor(game.color, -30)})">
-                <i class="fas ${game.icon}"></i>
+            <div class="game-cover">
+                <img src="${imagePath}" alt="${game.title}" onerror="this.parentElement.classList.add('fallback');this.remove();">
+                <i class="fas ${game.icon}" style="display:none;"></i>
             </div>
             <div class="game-info">
                 <h3 class="game-title">${game.title}</h3>
