@@ -464,27 +464,34 @@ class NESGameStation {
 
     // Setup keyboard controls
     setupKeyboardControls() {
+        // Support both key and code for better compatibility
+        const keyMap = {
+            // Arrow keys
+            'ArrowUp': 'up', 'arrowup': 'up', 'up': 'up',
+            'ArrowDown': 'down', 'arrowdown': 'down', 'down': 'down',
+            'ArrowLeft': 'left', 'arrowleft': 'left', 'left': 'left',
+            'ArrowRight': 'right', 'arrowright': 'right', 'right': 'right',
+            // Action buttons
+            'z': 'a', 'Z': 'a', 'KeyZ': 'a',
+            'x': 'b', 'X': 'b', 'KeyX': 'b',
+            // Control buttons
+            'Enter': 'start', 'enter': 'start',
+            'Shift': 'select', 'ShiftLeft': 'select', 'ShiftRight': 'select'
+        };
+
         document.addEventListener('keydown', (e) => {
             if (!document.getElementById('emulatorModal').classList.contains('active')) {
                 return;
             }
 
-            // NES Controls - normalize key to lowercase
-            const key = e.key.toLowerCase();
-            const keyMap = {
-                'arrowup': 'up',
-                'arrowdown': 'down',
-                'arrowleft': 'left',
-                'arrowright': 'right',
-                'z': 'a',
-                'x': 'b',
-                'enter': 'start',
-                'shift': 'select'
-            };
-
+            // Check both e.key and e.code
+            const key = e.key || e.code || '';
             const action = keyMap[key];
+
             if (action) {
                 e.preventDefault();
+                e.stopPropagation();
+                console.log('Key pressed:', key, '-> Action:', action);
                 this.handleNESInput(action, true);
             }
         });
@@ -494,21 +501,13 @@ class NESGameStation {
                 return;
             }
 
-            // NES Controls - normalize key to lowercase
-            const key = e.key.toLowerCase();
-            const keyMap = {
-                'arrowup': 'up',
-                'arrowdown': 'down',
-                'arrowleft': 'left',
-                'arrowright': 'right',
-                'z': 'a',
-                'x': 'b',
-                'enter': 'start',
-                'shift': 'select'
-            };
-
+            // Check both e.key and e.code
+            const key = e.key || e.code || '';
             const action = keyMap[key];
+
             if (action) {
+                e.preventDefault();
+                e.stopPropagation();
                 this.handleNESInput(action, false);
             }
         });
