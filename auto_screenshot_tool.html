@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>NES游戏自动截图</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: #1a1a2e; color: #eee; padding: 20px; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        .container { text-align: center; background: #16213e; padding: 40px; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.5); max-width: 600px; }
+        h1 { color: #00ff88; margin-bottom: 20px; }
+        #status { font-size: 18px; margin: 20px 0; padding: 20px; background: #0f3460; border-radius: 8px; }
+        #progress { font-size: 24px; color: #00ff88; margin: 20px 0; }
+        canvas { display: none; }
+        button { background: #00ff88; color: #1a1a2e; border: none; padding: 15px 30px; font-size: 16px; border-radius: 8px; cursor: pointer; font-weight: bold; margin-top: 20px; }
+        button:hover { background: #00cc6a; }
+        button:disabled { background: #666; cursor: not-allowed; }
+        .log { margin-top: 20px; max-height: 200px; overflow-y: auto; text-align: left; background: #0a0a15; padding: 15px; border-radius: 8px; font-family: monospace; font-size: 12px; }
+        .log-item { margin: 5px 0; }
+        .success { color: #00ff88; }
+        .error { color: #ff6b6b; }
+        .info { color: #4ecdc4; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎮 NES游戏自动截图</h1>
+        <div id="progress">准备中...</div>
+        <div id="status">点击下方按钮开始自动截图</div>
+        <canvas id="canvas" width="256" height="240"></canvas>
+        <button id="startBtn" onclick="startCapture()">▶ 开始自动截图</button>
+        <div class="log" id="log"></div>
+    </div>
+    <script src="js/jsnes.min.js"></script>
+    <script src="tools/auto_screenshot_runner.js"></script>
+</body>
+</html>

@@ -23,7 +23,10 @@
       "Bash(git push:*)",
       "Bash(git remote set-url:*)",
       "Bash(vercel:*)",
-      "Bash(VERCEL_SCOPE=tommys-projects-f2e06cdf vercel:*)"
+      "Bash(VERCEL_SCOPE=tommys-projects-f2e06cdf vercel:*)",
+      "Bash(timeout:*)",
+      "Bash(node:*)",
+      "Bash(start http://localhost:8000/tools/auto_screenshot_full.html)"
     ]
   }
 }

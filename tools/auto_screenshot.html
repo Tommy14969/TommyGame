@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NES游戏截图工具</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: Arial, sans-serif;
+            background: #1a1a2e;
+            color: #eee;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            color: #00ff88;
+            margin-bottom: 10px;
+        }
+        .instructions {
+            background: #16213e;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #00ff88;
+        }
+        .instructions h3 { color: #00ff88; margin-bottom: 10px; }
+        .instructions ol { margin-left: 20px; line-height: 1.8; }
+        .game-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+        }
+        .game-item {
+            background: #0f3460;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+        }
+        .game-id {
+            background: #e94560;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        .game-title {
+            margin: 10px 0;
+            font-weight: bold;
+        }
+        .run-btn {
+            background: #00ff88;
+            color: #1a1a2e;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        .run-btn:hover { background: #00cc6a; }
+        .status {
+            margin-top: 10px;
+            font-size: 12px;
+            color: #aaa;
+        }
+        .screenshot-area {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #16213e;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            max-width: 400px;
+            display: none;
+        }
+        .screenshot-area.active { display: block; }
+        canvas {
+            background: #000;
+            border: 2px solid #00ff88;
+            display: block;
+            margin: 10px 0;
+        }
+        .capture-btn {
+            background: #e94560;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: bold;
+        }
+        .capture-btn:hover { background: #d63851; }
+        .progress {
+            background: #0f3460;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎮 NES游戏截图工具</h1>
+
+        <div class="instructions">
+            <h3>📸 自动截图说明</h3>
+            <ol>
+                <li>点击游戏的"运行并截图"按钮</li>
+                <li>游戏会在右侧窗口运行3秒</li>
+                <li>自动截图并下载图片</li>
+                <li>将下载的图片放入 <code>images/</code> 目录</li>
+                <li>刷新游戏站点查看效果</li>
+            </ol>
+            <p style="margin-top: 15px; color: #ffcc00;">
+                💡 提示：截图显示的是真实游戏画面，不是封面！
+            </p>
+        </div>
+
+        <div class="progress">
+            <strong>进度：</strong>
+            <span id="progress">0/44</span> |
+            <span id="current">未开始</span>
+        </div>
+
+        <div class="game-grid" id="gameGrid"></div>
+    </div>
+
+    <div class="screenshot-area" id="screenshotArea">
+        <h3 id="currentGame">游戏预览</h3>
+        <canvas id="nesCanvas" width="256" height="240"></canvas>
+        <div id="countdown">运行中... 3</div>
+        <button class="capture-btn" id="captureBtn">立即截图</button>
+        <button class="capture-btn" onclick="closeScreenshot()" style="background: #666; margin-top: 10px;">关闭</button>
+    </div>
+
+    <script src="js/jsnes.min.js"></script>
+    <script>
+        const games = [
+            {id: 1, title: "超级马里奥兄弟", titleEn: "Super_Mario_Bros", rom: "roms/1-Super_Mario_Bros.nes"},
+            {id: 2, title: "塞尔达传说", titleEn: "The_Legend_of_Zelda", rom: "roms/2-The_Legend_of_Zelda.nes"},
+            {id: 3, title: "魂斗罗", titleEn: "Contra", rom: "roms/3-Contra.nes"},
+            {id: 4, title: "坦克大战", titleEn: "Tank_Battle", rom: "roms/4-Battle_City.nes"},
+            {id: 5, title: "吃豆人", titleEn: "Pac-Man", rom: "roms/5-Pac-Man.nes"},
+            {id: 6, title: "大金刚", titleEn: "Donkey_Kong", rom: "roms/6-Donkey_Kong.nes"},
+            {id: 7, title: "洛克人", titleEn: "Mega_Man", rom: "roms/7-Mega_Man.nes"},
+            {id: 8, title: "恶魔城", titleEn: "Castlevania", rom: "roms/8-Castlevania.nes"},
+            {id: 9, title: "银河战士", titleEn: "Metroid", rom: "roms/9-Metroid.nes"},
+            {id: 10, title: "忍者龙剑传", titleEn: "Ninja_Gaiden", rom: "roms/10-Ninja_Gaiden.nes"},
+            {id: 11, title: "俄罗斯方块", titleEn: "Tetris", rom: "roms/11-Tetris.nes"},
+            {id: 12, title: "炸弹人", titleEn: "Bomberman", rom: "roms/12-Bomberman.nes"},
+            {id: 13, title: "冰山登山者", titleEn: "Ice_Climber", rom: "roms/13-Ice_Climber.nes"},
+            {id: 14, title: "打鸭子", titleEn: "Duck_Hunt", rom: "roms/14-Duck_Hunt.nes"},
+            {id: 15, title: "拳无虚发", titleEn: "Punch-Out", rom: "roms/15-Punch-Out.nes"},
+            {id: 16, title: "最终幻想", titleEn: "Final_Fantasy", rom: "roms/16-Final_Fantasy.nes"},
+            {id: 17, title: "勇者斗恶龙", titleEn: "Dragon_Quest", rom: "roms/17-Dragon_Quest.nes"},
+            {id: 18, title: "星之卡比", titleEn: "Kirby_Adventure", rom: "roms/18-Kirby_Adventure.nes"},
+            {id: 19, title: "马里奥兄弟3", titleEn: "Super_Mario_Bros_3", rom: "roms/19-Super_Mario_Bros_3.nes"},
+            {id: 20, title: "合金装备", titleEn: "Metal_Gear", rom: "roms/20-Metal_Gear.nes"},
+            {id: 21, title: "双截龙", titleEn: "Double_Dragon", rom: "roms/21-Double_Dragon.nes"},
+            {id: 23, title: "赤影战士", titleEn: "Shadow_of_the_Ninja", rom: "roms/23-Shadow_of_the_Ninja.nes"},
+            {id: 24, title: "绿色兵团", titleEn: "Rush_Attack", rom: "roms/24-Rush_n_Attack.nes"},
+            {id: 25, title: "淘金者", titleEn: "Lode_Runner", rom: "roms/25-Lode_Runner.nes"},
+            {id: 26, title: "所罗门之钥", titleEn: "Solomons_Key", rom: "roms/26-Solomons_Key.nes"},
+            {id: 27, title: "泡泡龙", titleEn: "Bubble_Bobble", rom: "roms/27-Bubble_Bobble.nes"},
+            {id: 29, title: "影之传说", titleEn: "The_Legend_of_Kage", rom: "roms/29-The_Legend_of_Kage.nes"},
+            {id: 31, title: "马里奥高尔夫", titleEn: "Mario_Golf", rom: "roms/31-Mario_Golf.nes"},
+            {id: 33, title: "越野机车", titleEn: "Excitebike", rom: "roms/33-Excitebike.nes"},
+            {id: 35, title: "世界杯", titleEn: "World_Cup", rom: "roms/35-World_Cup.nes"},
+            {id: 36, title: "特库莫碗", titleEn: "Tecmo_Bowl", rom: "roms/36-Tecmo_Bowl.nes"},
+            {id: 37, title: "弹珠台", titleEn: "Pinball", rom: "roms/37-Pinball.nes"},
+            {id: 38, title: "气球塔防", titleEn: "Balloon_Fight", rom: "roms/38-Balloon_Fight.nes"},
+            {id: 39, title: "西天取经", titleEn: "Journey_to_the_West", rom: "roms/39-Journey_to_the_West.nes"},
+            {id: 41, title: "火之鸟", titleEn: "Phoenix", rom: "roms/41-Phoenix.nes"},
+            {id: 42, title: "小蜜蜂", titleEn: "Galaga", rom: "roms/42-Galaga.nes"},
+            {id: 43, title: "太空侵略者", titleEn: "Space_Invaders", rom: "roms/43-Space_Invaders.nes"},
+            {id: 44, title: "1942", titleEn: "1942", rom: "roms/44-1942.nes"},
+            {id: 45, title: "吸尘器", titleEn: "Wrecking_Crew", rom: "roms/45-Wrecking_Crew.nes"},
+            {id: 46, title: "石匠", titleEn: "Mario_Bros", rom: "roms/46-Mario_Bros.nes"},
+            {id: 48, title: "功夫", titleEn: "Kung_Fu", rom: "roms/48-Kung_Fu.nes"},
+            {id: 49, title: "猪小弟", titleEn: "Pooyan", rom: "roms/49-Pooyan.nes"},
+            {id: 50, title: "大蜜蜂", titleEn: "Xevious", rom: "roms/50-Xevious.nes"},
+            {id: 51, title: "冒险岛", titleEn: "Adventure_Island", rom: "roms/51-Adventure_Island.nes"},
+        ];
+
+        let completed = 0;
+        let currentNES = null;
+        let animationId = null;
+
+        function renderGames() {
+            const grid = document.getElementById('gameGrid');
+            grid.innerHTML = games.map(game => `
+                <div class="game-item">
+                    <span class="game-id">#${game.id}</span>
+                    <div class="game-title">${game.title}</div>
+                    <button class="run-btn" onclick="runAndCapture(${game.id})">
+                        ▶ 运行并截图
+                    </button>
+                    <div class="status" id="status-${game.id}">等待中</div>
+                </div>
+            `).join('');
+        }
+
+        async function runAndCapture(gameId) {
+            const game = games.find(g => g.id === gameId);
+            if (!game) return;
+
+            const status = document.getElementById(`status-${gameId}`);
+            status.textContent = '加载中...';
+
+            try {
+                const response = await fetch(game.rom);
+                if (!response.ok) throw new Error('ROM not found');
+                const romData = await response.arrayBuffer();
+                const romArray = new Uint8Array(romData);
+                const romString = Array.from(romArray).map(b => String.fromCharCode(b)).join('');
+
+                // Show screenshot area
+                document.getElementById('screenshotArea').classList.add('active');
+                document.getElementById('currentGame').textContent = game.title;
+
+                // Initialize NES
+                const canvas = document.getElementById('nesCanvas');
+                const ctx = canvas.getContext('2d');
+
+                currentNES = new jsnes.NES({
+                    onFrame: function(buffer) {
+                        const imageData = ctx.createImageData(256, 240);
+                        for (let i = 0; i < buffer.length; i++) {
+                            const pixel = buffer[i];
+                            const idx = i * 4;
+                            imageData.data[idx] = (pixel >> 16) & 0xFF;
+                            imageData.data[idx + 1] = (pixel >> 8) & 0xFF;
+                            imageData.data[idx + 2] = pixel & 0xFF;
+                            imageData.data[idx + 3] = 255;
+                        }
+                        ctx.putImageData(imageData, 0, 0);
+                    },
+                    onAudioSample: function() {}
+                });
+
+                currentNES.loadROM(romString);
+                status.textContent = '运行中...';
+
+                // Run for 3 seconds
+                let countdown = 3;
+                const countdownEl = document.getElementById('countdown');
+                countdownEl.textContent = `运行中... ${countdown}`;
+
+                const timer = setInterval(() => {
+                    countdown--;
+                    countdownEl.textContent = `运行中... ${countdown}`;
+                    if (countdown <= 0) {
+                        clearInterval(timer);
+                        captureAndDownload(game);
+                    }
+                }, 1000);
+
+                // Start frame loop
+                function frame() {
+                    if (currentNES) {
+                        currentNES.frame();
+                        animationId = requestAnimationFrame(frame);
+                    }
+                }
+                frame();
+
+            } catch (error) {
+                status.textContent = '❌ 失败: ' + error.message;
+            }
+        }
+
+        function captureAndDownload(game) {
+            const canvas = document.getElementById('nesCanvas');
+
+            // Convert canvas to blob
+            canvas.toBlob(blob => {
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `${game.id}-${game.titleEn}.png`;
+                a.click();
+                URL.revokeObjectURL(url);
+
+                // Update status
+                completed++;
+                document.getElementById('progress').textContent = `${completed}/44`;
+                document.getElementById(`status-${game.id}`).textContent = '✅ 完成';
+
+                // Close after 2 seconds
+                setTimeout(() => closeScreenshot(), 2000);
+            });
+        }
+
+        document.getElementById('captureBtn').addEventListener('click', () => {
+            const canvas = document.getElementById('nesCanvas');
+            canvas.toBlob(blob => {
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `screenshot-${Date.now()}.png`;
+                a.click();
+                URL.revokeObjectURL(url);
+            });
+        });
+
+        function closeScreenshot() {
+            if (animationId) {
+                cancelAnimationFrame(animationId);
+                animationId = null;
+            }
+            currentNES = null;
+            document.getElementById('screenshotArea').classList.remove('active');
+        }
+
+        // Initialize
+        renderGames();
+    </script>
+</body>
+</html>
