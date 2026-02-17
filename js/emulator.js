@@ -117,14 +117,20 @@ class NESEmulator {
     }
 
     buttonDown(button) {
+        console.log('[Emulator] buttonDown called:', button, 'running:', this.running, 'nes:', !!this.nes);
         if (this.nes && this.running) {
             this.nes.buttonDown(1, button);
+            console.log('[Emulator] Button DOWN sent to JSNES:', button);
+        } else {
+            console.error('[Emulator] Cannot press button - NES not running or initialized');
         }
     }
 
     buttonUp(button) {
+        console.log('[Emulator] buttonUp called:', button);
         if (this.nes && this.running) {
             this.nes.buttonUp(1, button);
+            console.log('[Emulator] Button UP sent to JSNES:', button);
         }
     }
 

@@ -514,6 +514,8 @@ class NESGameStation {
     }
 
     handleNESInput(button, pressed) {
+        console.log('[App] handleNESInput:', button, 'pressed:', pressed, 'emulator exists:', !!window.nesEmulator);
+
         if (window.nesEmulator && typeof jsnes !== 'undefined') {
             const buttonMap = {
                 'up': jsnes.Controller.BUTTON_UP,
@@ -527,13 +529,21 @@ class NESGameStation {
             };
 
             const nesButton = buttonMap[button];
+            console.log('[App] Mapped button:', button, '-> JSNES button:', nesButton);
+
             if (nesButton) {
                 if (pressed) {
+                    console.log('[App] Calling buttonDown...');
                     window.nesEmulator.buttonDown(nesButton);
                 } else {
+                    console.log('[App] Calling buttonUp...');
                     window.nesEmulator.buttonUp(nesButton);
                 }
+            } else {
+                console.error('[App] No JSNES button mapping for:', button);
             }
+        } else {
+            console.error('[App] Cannot handle input - emulator not ready');
         }
     }
 
