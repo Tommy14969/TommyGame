@@ -531,7 +531,8 @@ class NESGameStation {
             const nesButton = buttonMap[button];
             console.log('[App] Mapped button:', button, '-> JSNES button:', nesButton);
 
-            if (nesButton) {
+            // Check if button exists in mapping (not falsy check, since BUTTON_A = 0)
+            if (nesButton !== undefined) {
                 if (pressed) {
                     console.log('[App] Calling buttonDown...');
                     window.nesEmulator.buttonDown(nesButton);
