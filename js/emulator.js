@@ -38,7 +38,7 @@ class NESEmulator {
                 sampleRate: 44100
             });
 
-            console.log('NES Emulator initialized');
+            console.log('NES Emulator initialized with color correction');
             return true;
         } catch (error) {
             console.error('Failed to initialize NES emulator:', error);
@@ -84,7 +84,7 @@ class NESEmulator {
     }
 
     onFrame(buffer) {
-        // Render frame to canvas with color correction
+        // Render frame to canvas with mild color correction
         const imageData = this.ctx.createImageData(256, 240);
         const data = imageData.data;
 
@@ -94,11 +94,10 @@ class NESEmulator {
             let g = ((pixel >> 8) & 0xFF);
             let b = (pixel & 0xFF);
 
-            // Apply color correction to fix blue tint
-            // These values adjust the NES colors to look more accurate
-            r = Math.min(255, r * 1.10 + 8);
-            g = Math.min(255, g * 1.05 + 4);
-            b = Math.min(255, b * 0.90 - 5);
+            // Mild color correction to reduce blue tint
+            r = Math.min(255, Math.floor(r * 1.08));
+            g = Math.min(255, Math.floor(g * 1.03));
+            b = Math.min(255, Math.floor(b * 0.90));
 
             const index = i * 4;
             data[index] = r;
