@@ -94,15 +94,10 @@ class NESEmulator {
             let g = ((pixel >> 8) & 0xFF);
             let b = (pixel & 0xFF);
 
-            // Mild color correction to reduce blue tint
-            r = Math.min(255, Math.floor(r * 1.08));
-            g = Math.min(255, Math.floor(g * 1.03));
-            b = Math.min(255, Math.floor(b * 0.90));
-
             const index = i * 4;
-            data[index] = r;
-            data[index + 1] = g;
-            data[index + 2] = b;
+            data[index] = b;     // Blue
+            data[index + 1] = g; // Green
+            data[index + 2] = r; // Red
             data[index + 3] = 255;
         }
 
