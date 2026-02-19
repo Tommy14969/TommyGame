@@ -84,15 +84,21 @@ class NESEmulator {
     }
 
     onFrame(buffer) {
-        // Render frame to canvas
+        // Render frame to canvas with color correction
         const imageData = this.ctx.createImageData(256, 240);
         const data = imageData.data;
 
         for (let i = 0; i < buffer.length; i++) {
             const pixel = buffer[i];
-            const r = ((pixel >> 16) & 0xFF);
-            const g = ((pixel >> 8) & 0xFF);
-            const b = (pixel & 0xFF);
+            let r = ((pixel >> 16) & 0xFF);
+            let g = ((pixel >> 8) & 0xFF);
+            let b = (pixel & 0xFF);
+
+            // Apply color correction to fix blue tint
+            // These values adjust the NES colors to look more accurate
+            r = Math.min(255, r * 1.10 + 8);
+            g = Math.min(255, g * 1.05 + 4);
+            b = Math.min(255, b * 0.90 - 5);
 
             const index = i * 4;
             data[index] = r;
