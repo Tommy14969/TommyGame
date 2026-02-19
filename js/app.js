@@ -168,6 +168,14 @@ class NESGameStation {
             this.loadState();
         });
 
+        document.getElementById('exportBtn').addEventListener('click', () => {
+            this.exportState();
+        });
+
+        document.getElementById('importBtn').addEventListener('change', (e) => {
+            this.importState(e.target.files[0]);
+        });
+
         document.getElementById('muteBtn').addEventListener('click', () => {
             this.toggleMute();
         });
@@ -443,6 +451,53 @@ class NESGameStation {
                 this.showNotification('没有找到存档');
             }
         }
+    }
+
+    exportState() {
+        if (window.nesEmulator && this.currentGame) {
+            const gameName = this.currentGame.titleEn.replace(/\s+/g, '_');
+            const saveSlot = this.currentGame.id;
+            if (window.nesEmulator.exportState(saveSlot, gameName)) {
+                this.showNotification(`存档已导出: ${gameName}.json`);
+            } else {
+                this.showNotification('导出失败');
+            }
+        }
+    }
+
+    importState(file) {
+        if (!file) {
+            return;
+        }
+
+        if (!window.nesEmulator) {
+            this.showNotification('模拟器未运行');
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = async (e) => {
+            const fileData = e.target.result;
+            const result = await window.nesEmulator.importState(fileData);
+
+            if (result.success) {
+                const gameName = result.gameName || '未知游戏';
+                const date = result.timestamp ? new Date(result.timestamp).toLocaleString('zh-CN') : '未知时间';
+                this.showNotification(`已加载存档: ${gameName} (${date})`);
+            } else {
+                this.showNotification(`导入失败: ${result.error || '文件格式错误'}`);
+            }
+
+            // Reset file input to allow importing the same file again
+            document.getElementById('importBtn').value = '';
+        };
+
+        reader.onerror = () => {
+            this.showNotification('文件读取失败');
+            document.getElementById('importBtn').value = '';
+        };
+
+        reader.readAsText(file);
     }
 
     toggleMute() {

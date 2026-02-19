@@ -181,6 +181,60 @@ class NESEmulator {
         }
     }
 
+    exportState(slot, gameName) {
+        // Export game state as a downloadable file
+        try {
+            const state = this.nes.toJSON();
+            const saveData = {
+                version: '1.0',
+                gameName: gameName,
+                gameId: slot,
+                timestamp: new Date().toISOString(),
+                state: state
+            };
+
+            // Create blob and download link
+            const blob = new Blob([JSON.stringify(saveData, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${gameName}_save_${new Date().toISOString().slice(0, 10)}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            return true;
+        } catch (error) {
+            console.error('Failed to export state:', error);
+            return false;
+        }
+    }
+
+    async importState(fileData) {
+        // Import game state from a file
+        try {
+            const saveData = JSON.parse(fileData);
+
+            // Validate save data format
+            if (!saveData.state) {
+                throw new Error('Invalid save file format');
+            }
+
+            // Load the state
+            this.nes.fromJSON(saveData.state);
+
+            return {
+                success: true,
+                gameName: saveData.gameName,
+                timestamp: saveData.timestamp
+            };
+        } catch (error) {
+            console.error('Failed to import state:', error);
+            return { success: false, error: error.message };
+        }
+    }
+
     stop() {
         this.running = false;
         this.paused = false;
